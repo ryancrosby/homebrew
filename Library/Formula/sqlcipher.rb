@@ -7,9 +7,13 @@ class Sqlcipher < Formula
 
   head "https://github.com/sqlcipher/sqlcipher.git"
 
+  option 'with-fts', 'Enable the FTS module'
+
   keg_only "SQLCipher conflicts with the system and Homebrew SQLites."
 
   def install
+    ENV.append 'CPPFLAGS', "-DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS" if build.include? "with-fts"
+
     system "./configure", "--prefix=#{prefix}", "--enable-tempstore=yes",
                           "CFLAGS=-DSQLITE_HAS_CODEC", "LDFLAGS=-lcrypto",
                           "--disable-tcl"
